@@ -1,5 +1,5 @@
 // src/components/auth/AuthModal.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import {
   X,
@@ -17,12 +17,25 @@ import {
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: "login" | "register" | "signin" | "signup" | "forgot_password";
 }
 
 type AuthMode = "signin" | "signup" | "forgot_password";
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const [mode, setMode] = useState<AuthMode>("signin");
+export const AuthModal: React.FC<AuthModalProps> = ({
+  isOpen,
+  onClose,
+  initialMode = "login",
+}) => {
+  const getNormalizedMode = (mode: string): AuthMode => {
+    if (mode === "register" || mode === "signup") return "signup";
+    if (mode === "forgot_password") return "forgot_password";
+    return "signin";
+  };
+
+  const [mode, setMode] = useState<AuthMode>(() =>
+    getNormalizedMode(initialMode),
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,6 +43,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Sync mode whenever initialMode prop updates
+  useEffect(() => {
+    if (initialMode) {
+      setMode(getNormalizedMode(initialMode));
+    }
+  }, [initialMode]);
 
   if (!isOpen) return null;
 
