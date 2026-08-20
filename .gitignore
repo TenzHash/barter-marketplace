@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment files
+.env
+.env.local
+.env.production
