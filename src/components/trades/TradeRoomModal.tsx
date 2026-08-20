@@ -91,10 +91,10 @@ export const TradeRoomModal: React.FC<TradeRoomModalProps> = ({
           table: "trade_messages",
           filter: `trade_id=eq.${tradeId}`,
         },
-        async (payload) => {
-          const incomingMsg = payload.new as TradeMessage;
-
-          // Replace matching optimistic local message or append if incoming from peer
+        // Change: (payload) => { ... }
+        // To:
+        (payload: { new: TradeMessage }) => {
+          const incomingMsg = payload.new;
           setMessages((prev) => {
             const hasMatch = prev.some(
               (m) =>

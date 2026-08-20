@@ -47,8 +47,8 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
           table: "notifications",
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          setNotifications((prev) => [payload.new as AppNotification, ...prev]);
+        (payload: { new: AppNotification }) => {
+          setNotifications((prev) => [payload.new, ...prev]);
         },
       )
       .subscribe();
